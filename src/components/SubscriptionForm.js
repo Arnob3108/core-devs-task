@@ -3,6 +3,7 @@ import hitToast from "../helpers/hitToast";
 
 export default function SubscriptionForm() {
   let [email, setEmail] = useState("");
+  console.log(email);
   let [alertClass, setAlertClass] = useState("");
   var parentComp = useRef();
 
@@ -10,6 +11,7 @@ export default function SubscriptionForm() {
     e.preventDefault();
 
     if (!validate(email)) {
+      console.log(email);
       setAlertClass("alert-validate");
       return;
     }
@@ -22,9 +24,10 @@ export default function SubscriptionForm() {
     })
       .then((res) => res.text())
       .then((data) => JSON.parse(`${data}`))
-      .then((data) =>
-        hitToast(data.message, data.success ? "success" : "error")
-      )
+      .then((data) => {
+        console.log(data);
+        hitToast(data?.message, data?.success ? "success" : "error");
+      })
       .catch(() =>
         hitToast("Something went wrong. Please try again.", "error")
       );
@@ -33,12 +36,19 @@ export default function SubscriptionForm() {
   };
 
   const validate = (email) => {
+    // if (
+    //   email
+    //     .trim(
+    //       /^([a-zA-Z0-9_\-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/
+    //     )
+    //     .match() == null
+    // )
     if (
       email
-        .trim(
+        .trim()
+        .match(
           /^([a-zA-Z0-9_\-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/
-        )
-        .match() == null
+        ) == null
     ) {
       return false;
     } else if (email.trim() === "") {
