@@ -1,7 +1,7 @@
 import Counter from "./Counter";
 import SubscriptionForm from "./SubscriptionForm";
 
-export default function comingSoon() {
+export default function ComingSoon() {
   // rendaring issue because of 'default'
   return (
     <div className="size1 overlay1">
