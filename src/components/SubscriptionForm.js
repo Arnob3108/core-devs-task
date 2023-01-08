@@ -3,9 +3,11 @@ import hitToast from "../helpers/hitToast";
 
 export default function SubscriptionForm() {
   let [email, setEmail] = useState("");
-  console.log(email);
+  // console.log(email);
+
   let [alertClass, setAlertClass] = useState("");
   var parentComp = useRef();
+  const [loading, setLoading] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,6 +17,7 @@ export default function SubscriptionForm() {
       setAlertClass("alert-validate");
       return;
     }
+    setLoading("Please wait...");
     fetch("http://103.108.146.90:5000/sendemail", {
       method: "POST",
       headers: {
@@ -22,15 +25,17 @@ export default function SubscriptionForm() {
       },
       body: JSON.stringify({ email }),
     })
-      .then((res) => res.text())
-      .then((data) => JSON.parse(`${data}`))
+      // .then((res) => res.text())
+      .then((res) => res.json())
+      // .then((data) => JSON.parse(`${data}`))
       .then((data) => {
-        console.log(data);
-        hitToast(data?.message, data?.success ? "success" : "error");
+        setLoading("");
+        hitToast(data.success ? "success" : "error", data.message);
       })
-      .catch(() =>
-        hitToast("Something went wrong. Please try again.", "error")
-      );
+      .catch(() => {
+        setLoading("");
+        hitToast("error", "Something went wrong. Please try again.");
+      });
 
     setAlertClass("");
   };
@@ -79,7 +84,7 @@ export default function SubscriptionForm() {
       </div>
 
       <button className="flex-c-m size3 s2-txt3 how-btn1 trans-04 where1">
-        Subscribe
+        {loading ? loading : "Subscribe"}
       </button>
     </form>
   );
